@@ -3,21 +3,6 @@ GLOBAL.require("debugkeys")
 GLOBAL.require("debugtools")
 
 
-local function sortRecipesAlphabetically(rawRecipes)
-	-- For each recipe tab...
-	for tabName, tabRecipes in pairs(rawRecipes) do
-
-		-- Sort the recipes.
-		table.sort(tabRecipes, function(a, b)
-			return a.value < b.value
-		end)
-
-		print('>> START')
-		print(dumpvar(tabRecipes))
-		print('>> END')
-	end
-end
-
 local function sortRecipes()
 	local sortedRecipes = {}
 
@@ -30,30 +15,39 @@ local function sortRecipes()
 				sortedRecipes[recipe.tab.str] = {}
 			end
 
-			local recipeData = {
+			table.insert(sortedRecipes[recipe.tab.str], {
 				slug  = slug,
 				value = recipe.name
-			}
-
-			table.insert(sortedRecipes[recipe.tab.str], recipeData)
+			})
 		end
 	end
 
-	-- For each recipe tab...
-	for tabName, tabRecipes in pairs(sortedRecipes) do
+	-- For each tab, sort the recipies.
+	for _, tabRecipes in pairs(sortedRecipes) do
 
-		-- Sort it!
+		-- Sort the temporary table.
 		table.sort(tabRecipes, function(a, b)
 			return a.value < b.value
 		end)
-	end
 
-	-- Get sort offsets and apply back to AllRecipes.
+		local counter = 1
+
+		-- Apply the sorted positions to the actual recipes list.
+		for _, recipe in pairs(tabRecipes) do
+			GLOBAL.AllRecipes[recipe.slug].sortkey = counter
+			counter = counter + 1
+		end
+	end
 end
 
 AddClassPostConstruct("screens/playerhud", function(self)
-	print('DJPAUL-DCB-INIT')
+	print('DJPAUL-DCB-BEFORE')
+	print(dumpvar(GLOBAL.AllRecipes['pickaxe']))
+
 	sortRecipes()
+
+	print('DJPAUL-DCB-AFTER')
+	print(dumpvar(GLOBAL.AllRecipes['pickaxe']))
 end)
 
 
