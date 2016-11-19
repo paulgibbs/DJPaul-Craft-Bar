@@ -18,7 +18,7 @@ local function sortRecipes()
 
 			table.insert(sortedRecipes[recipe.tab.str], {
 				slug  = slug,
-				value = recipe.name
+				value = GLOBAL.STRINGS.NAMES[string.upper(recipe.name)]
 			})
 		end
 	end
