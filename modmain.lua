@@ -23,7 +23,6 @@ local function sortRecipes()
 		end
 	end
 
-
 	-- For each tab, sort the recipies.
 	for _, tabRecipes in pairs(sortedRecipes) do
 
@@ -40,10 +39,18 @@ local function sortRecipes()
 	end
 end
 
-AddClassPostConstruct("screens/playerhud", function(self)
-	print('DJPAUL-DCB-BEFORE')
-	sortRecipes()
-end)
+local function craftbarLabels(craftslot)
+--    for k = 1, #craftslot.slots do
+	   	--fgimage:Hide()
+  --  end
+  	craftslot:Clear()
+
+	print("no you won't")
+end
+
+AddClassPostConstruct("screens/playerhud", sortRecipes)
+--AddClassPostConstruct("widgets/craftslot", craftbarLabels)
+
 
 
 local function dumpvar(data)
@@ -51,7 +58,7 @@ local function dumpvar(data)
     local tablecache = {}
     local buffer = ""
     local padder = "    "
- 
+
     local function _dumpvar(d, depth)
         local t = type(d)
         local str = tostring(d)
@@ -78,3 +85,19 @@ local function dumpvar(data)
     _dumpvar(data, 0)
     return buffer
 end
+
+
+--[[
+    Widget._ctor(self, "Craftslot")
+    self.owner = owner
+
+    self.atlas = atlas
+    self.bgimage = self:AddChild(Image(atlas, bgim))
+
+    self.tile = self:AddChild(RecipeTile(nil))
+    self.fgimage = self:AddChild(Image("images/hud.xml", "craft_slot_locked.tex"))
+    self.fgimage:Hide()
+    self.lightbulbimage = self:AddChild(Image("images/hud.xml", "craft_slot_prototype.tex"))
+    self.lightbulbimage:Hide()
+end)
+]]--
